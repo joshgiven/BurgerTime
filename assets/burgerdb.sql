@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS `ingredient_type` ;
 
 CREATE TABLE IF NOT EXISTS `ingredient_type` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NULL,
+  `type` VARCHAR(45) NULL,
   `description` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `ingredient` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `ingredient_type_id` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
+  `description` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_ingredient_ingredient_type_idx` (`ingredient_type_id` ASC),
   CONSTRAINT `fk_ingredient_ingredient_type`
@@ -107,12 +108,12 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `burgerdb`;
-INSERT INTO `ingredient_type` (`id`, `name`, `description`) VALUES (1, 'bun', 'Outer hull');
-INSERT INTO `ingredient_type` (`id`, `name`, `description`) VALUES (2, 'protein', 'The \"meat\"');
-INSERT INTO `ingredient_type` (`id`, `name`, `description`) VALUES (3, 'sauce', 'Extra flavor');
-INSERT INTO `ingredient_type` (`id`, `name`, `description`) VALUES (4, 'cheese', 'Dairy delight');
-INSERT INTO `ingredient_type` (`id`, `name`, `description`) VALUES (5, 'topping', 'Traditional add-on');
-INSERT INTO `ingredient_type` (`id`, `name`, `description`) VALUES (6, 'special', 'Miscellaneous');
+INSERT INTO `ingredient_type` (`id`, `type`, `description`) VALUES (1, 'bun', 'Outer hull');
+INSERT INTO `ingredient_type` (`id`, `type`, `description`) VALUES (2, 'protein', 'The \"meat\"');
+INSERT INTO `ingredient_type` (`id`, `type`, `description`) VALUES (3, 'sauce', 'Extra flavor');
+INSERT INTO `ingredient_type` (`id`, `type`, `description`) VALUES (4, 'cheese', 'Dairy delight');
+INSERT INTO `ingredient_type` (`id`, `type`, `description`) VALUES (5, 'topping', 'Traditional add-on');
+INSERT INTO `ingredient_type` (`id`, `type`, `description`) VALUES (6, 'special', 'Miscellaneous');
 
 COMMIT;
 
@@ -122,23 +123,23 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `burgerdb`;
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (1, 1, 'Sesame Seed Bun');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (2, 1, 'Lettuce Wrap');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (3, 1, 'Glazed Donut');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (4, 1, 'Texas Toast');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (5, 2, 'All-Beef Patty');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (6, 2, 'Chicken Breast');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (7, 2, 'Portobello');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (8, 2, 'Black-Bean Patty');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (9, 2, 'Veggie Patty');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (10, 2, 'Fried Chicken');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (11, 3, 'Mayo');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (12, 3, 'Mustard');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (13, 3, 'Ketchup');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (14, 3, 'BBQ');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (15, 4, 'American');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (16, 5, 'Lettuce');
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`) VALUES (17, 6, 'Fried Cream Cheese');
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (1, 1, 'Sesame Seed Bun', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (2, 1, 'Lettuce Wrap', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (3, 1, 'Glazed Donut', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (4, 1, 'Texas Toast', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (5, 2, 'All-Beef Patty', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (6, 2, 'Chicken Breast', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (7, 2, 'Portobello', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (8, 2, 'Black-Bean Patty', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (9, 2, 'Veggie Patty', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (10, 2, 'Fried Chicken', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (11, 3, 'Mayo', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (12, 3, 'Mustard', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (13, 3, 'Ketchup', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (14, 3, 'BBQ', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (15, 4, 'American', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (16, 5, 'Lettuce', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (17, 6, 'Fried Cream Cheese', NULL);
 
 COMMIT;
 

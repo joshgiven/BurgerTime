@@ -17,6 +17,8 @@ DROP TABLE IF EXISTS `burger` ;
 CREATE TABLE IF NOT EXISTS `burger` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
+  `description` VARCHAR(45) NULL,
+  `creation_date` DATE NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -95,7 +97,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `burgerdb`;
-INSERT INTO `burger` (`id`, `name`) VALUES (1, 'Cheeseburger #1');
+INSERT INTO `burger` (`id`, `name`, `description`, `creation_date`) VALUES (1, 'Cheeseburger #1', 'Plain ol\' cheeburger', '2017-02-03');
 
 COMMIT;
 

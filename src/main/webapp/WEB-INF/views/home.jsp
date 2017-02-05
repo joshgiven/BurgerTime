@@ -9,6 +9,8 @@
 	Hello world!  
 </h1>
 
+<a href="listBurgers.do">list burgers</a>
+
 <P>  The time on the server is ${serverTime}. </P>
 </body>
 </html>

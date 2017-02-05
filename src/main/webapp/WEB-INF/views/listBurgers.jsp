@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
@@ -43,36 +42,30 @@
   
 <div class="container-fluid text-center">    
 	<div class="row content">
-		<div class="col-sm-2 sidenav">
-			<p><a href="#">Link</a></p>
-			<p><a href="#">Link</a></p>
-			<p><a href="#">Link</a></p>
-		</div>
+		<div class="col-sm-2 sidenav"><!-- <img src="burger-solid.png" /> --></div>
+		
+		
 		<div class="col-sm-8 text-left"> 
 			<h1>Burger List</h1>
-			<ul>
+			<ul class="list-unstyled">
 			<c:forEach var="info" items="${burgerInfos}">
 				<li>
-					<a>update</a>
-					<a>delete</a>
-					${info.name} ${desc}
+					<h3>
+						<span class="glyphicons glyphicons-fast-food"></span><a href="viewBurger.do?burgerId=${info.id}">${info.name}</a> <small>${info.description}</small>
+						<a class="btn btn-default pull-right" href="#"><span class="glyphicons glyphicons-remove-sign"></span>delete</a>
+						<a class="btn btn-default pull-right" href="#"><span class="glyphicons glyphicons-pencil"></span>update</a>
+					</h3>
 				</li>
 			</c:forEach>
 			</ul>
 		</div>
 		<div class="col-sm-2 sidenav">
-			<div class="well">
-				<p>ADS</p>
-			</div>
-			<div class="well">
-				<p>ADS</p>
-			</div>
 		</div>
 	</div>
 </div>
 
 <footer class="container-fluid text-center">
-  <p>Footer Text</p>
+<!--   <p>Footer Text</p> -->
 </footer>
 
 </body>

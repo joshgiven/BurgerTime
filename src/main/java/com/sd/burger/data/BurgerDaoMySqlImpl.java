@@ -5,8 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BurgerDaoMySqlImpl implements BurgerDAO {
 
@@ -24,84 +27,251 @@ public class BurgerDaoMySqlImpl implements BurgerDAO {
 	}
 
 	@Override
+	public Map<Integer, String> getAllIngredientTypes() {
+		Map<Integer, String> ingredientTypes = new HashMap<>();
+		try {
+			Connection conn = DriverManager.getConnection(url, user, pass);
+			String sql = "SELECT id, type" + " FROM ingredient_type;";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				ingredientTypes.put(rs.getInt(1), rs.getString(2));
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ingredientTypes;
+	}
+
+	@Override
+	public List<Ingredient> getIngredientsByType(int typeId) {
+		List<Ingredient> ingredientsByType = new ArrayList<>();
+		try {
+			Connection conn = DriverManager.getConnection(url, user, pass);
+			String sql = "SELECT i.id, i.name, i.description, it.type" 
+					  + " FROM ingredient i JOIN ingredient_type it ON i.ingredient_type_id = it.id"
+					  + " WHERE ingredient_type_id = ?;";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, typeId);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Ingredient i = new Ingredient(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4));
+				ingredientsByType.add(i);
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return ingredientsByType;
+	}
+
+	@Override
 	public List<BurgerInfo> getAllBurgerInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		List<BurgerInfo> burgerInfo = new ArrayList<>();
+		try {
+			Connection conn = DriverManager.getConnection(url, user, pass);
+			String sql = "SELECT id, name, description " + " FROM burger;";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				BurgerInfo bi = new BurgerInfo(rs.getInt(1), rs.getString(2), rs.getString(3));
+				burgerInfo.add(bi);
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return burgerInfo;
 	}
 
 	@Override
 	public Burger getBurgerById(int id) {
 		Burger burger = null;
-		
-		String sql = 
-			"SELECT b.id, b.name, b.description, " +
-			"       i.id, i.name, i.description, " +
-			"       it.type, bi.position"          +
-			"FROM burger_ingredient bi" +
-			"     JOIN ingredient i ON bi.ingredient_id = i.id" +
-			"     JOIN ingredient_type it ON it.id = i.ingredient_type_id" +
-			"     JOIN burger b ON b.id = bi.burger_id" +
-			"WHERE b.id = ?" +
-			"ORDER BY bi.position";
 
-		try( Connection conn = DriverManager.getConnection(url, user, pass);
-			 PreparedStatement stmt = conn.prepareStatement(sql); ) {
-	
+		String sql = "SELECT b.id, b.name, b.description," 
+						+ " i.id, i.name, i.description,"
+						+ " it.type, bi.position" 
+				+ " FROM burger_ingredient bi"
+					+ " JOIN ingredient i ON bi.ingredient_id = i.id"
+					+ " JOIN ingredient_type it ON it.id = i.ingredient_type_id"
+					+ " JOIN burger b ON b.id = bi.burger_id" 
+				+ " WHERE b.id = ?" 
+				+ " ORDER BY bi.position";
+
+		try (Connection conn = DriverManager.getConnection(url, user, pass);
+				PreparedStatement stmt = conn.prepareStatement(sql);) {
+
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
-			
+
 			List<Ingredient> ingredients = new ArrayList<>();
-			while(rs.next()) {
-				//id | name | description | id | name | description | type | position
-				
-				if(burger == null) {
-					int    bid   = rs.getInt(1);
+			while (rs.next()) {
+				// id | name | description | id | name | description | type |
+				// position
+
+				if (burger == null) {
+					int bid = rs.getInt(1);
 					String bname = rs.getString(2);
 					String bdesc = rs.getString(3);
 					// String bdate = rs.getString(4);
-					
+
 					burger = new Burger();
 					burger.setId(bid);
 					burger.setName(bname);
 					burger.setDescription(bdesc);
 					// burger.setDate(LocalDate.parse(bdate));
 				}
-				
-				int    ingId   = rs.getInt(4);
+
+				int ingId = rs.getInt(4);
 				String ingName = rs.getString(5);
 				String ingDesc = rs.getString(6);
 				String ingType = rs.getString(7);
-				int    ingPos  = rs.getInt(8);
-				
-				ingredients.add(ingPos-1, new Ingredient(ingId, ingName, ingDesc, ingType));
+				int ingPos = rs.getInt(8);
+
+				ingredients.add(ingPos - 1, new Ingredient(ingId, ingName, ingDesc, ingType));
 			}
-			
-			if(burger != null)
+
+			if (burger != null)
 				burger.setIngredients(ingredients);
 
-		}
-		catch(SQLException e) {
+		} catch (SQLException e) {
 			System.err.println(e.getErrorCode() + " : " + e.getMessage());
+			e.printStackTrace();
 		}
-		
+
 		return burger;
 	}
 
 	@Override
 	public boolean createBurger(Burger burger) {
-		// TODO Auto-generated method stub
+		try {
+			if (burger != null) {
+				Connection conn = DriverManager.getConnection(url, user, pass);
+				StringBuilder sb = new StringBuilder();
+				sb.append("INSERT INTO burger (name, description) ");
+				sb.append("VALUES (?, ?);");
+				String sql = sb.toString();
+
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, burger.getName());
+				stmt.setString(2, burger.getDescription());
+				int result = stmt.executeUpdate();
+
+				List<Ingredient> ingredients = burger.getIngredients();
+				
+				System.out.println(ingredients);
+				if (result > 0) {
+					for (int i = 0; i < ingredients.size(); i++) {
+						sb = new StringBuilder();
+						sb.append("INSERT INTO burger_ingredient (burger_id, ingredient_id, position) ");
+						sb.append("VALUES (?, ?, ?);");
+
+						sql = null;
+						sql = sb.toString();
+
+						stmt = null;
+						stmt = conn.prepareStatement(sql);
+						stmt.setInt(1, burger.getId());
+						stmt.setInt(2, ingredients.get(i).getId());
+						stmt.setInt(3, (i + 1));
+						result = stmt.executeUpdate();
+					}
+					if (result > 0) {
+						return true;
+					}
+				}
+				stmt.close();
+				conn.close();
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean updateBurger(Burger burger) {
-		// TODO Auto-generated method stub
+		try {
+			if (burger != null) {
+				Connection conn = DriverManager.getConnection(url, user, pass);
+				StringBuilder sb = new StringBuilder();
+				String sql = "UPDATE burger " + "SET name = ?, description = ? WHERE id = ?;";
+				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt.setString(1, burger.getName());
+				stmt.setString(2, burger.getDescription());
+				stmt.setInt(3, burger.getId());
+
+				int result = stmt.executeUpdate();
+
+				List<Ingredient> ingredients = burger.getIngredients();
+
+				if (result > 0) {
+					sql = "DELETE FROM burger_ingredient WHERE burger_id = ?;";
+					stmt = null;
+					stmt = conn.prepareStatement(sql);
+					stmt.setInt(1, burger.getId());
+					result = stmt.executeUpdate();
+					if (result > 0) {
+						for (int i = 0; i < ingredients.size(); i++) {
+							sb = new StringBuilder();
+							sb.append("INSERT INTO burger_ingredient (burger_id, ingredient_id, position) ");
+							sb.append("VALUES (?, ?, ?);");
+
+							sql = null;
+							sql = sb.toString();
+
+							stmt = null;
+							stmt = conn.prepareStatement(sql);
+							stmt.setInt(1, burger.getId());
+							stmt.setInt(2, ingredients.get(i).getId());
+							stmt.setInt(3, (i + 1));
+							result = stmt.executeUpdate();
+						}
+						if (result > 0) {
+							return true;
+						}
+					}
+				}
+				stmt.close();
+				conn.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean destroyBurgerById(int id) {
-		// TODO Auto-generated method stub
+		try {
+			Connection conn = DriverManager.getConnection(url, user, pass);
+			String sql = "DELETE FROM burger_ingredient WHERE burger_id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			int result = stmt.executeUpdate();
+			if (result > 0) {
+				sql = "DELETE FROM burger WHERE id = ?";
+				stmt = null;
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, id);
+				result = stmt.executeUpdate();
+				if (result > 0) {
+					return true;
+				}
+			}
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 

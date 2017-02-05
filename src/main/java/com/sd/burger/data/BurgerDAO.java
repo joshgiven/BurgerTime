@@ -9,6 +9,10 @@ public interface BurgerDAO {
 	
 	Burger getBurgerById(int id);
 	
+	Map<Integer, String> getAllIngredientTypes();
+	
+	List<Ingredient> getIngredientsByType(int id);
+	
 	// Create
 	boolean createBurger(Burger burger);
 	
@@ -51,6 +55,20 @@ public interface BurgerDAO {
 		public void setDescription(String description) {
 			this.description = description;
 		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("BurgerInfo [id=");
+			builder.append(id);
+			builder.append(", name=");
+			builder.append(name);
+			builder.append(", description=");
+			builder.append(description);
+			builder.append("]");
+			return builder.toString();
+		}
+		
 	}
 
 }

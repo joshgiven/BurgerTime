@@ -10,6 +10,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
+ 	<link rel="stylesheet" href="css/style.css">
+	
 	<c:choose>
 		<c:when test="${burger == null}">
 			<title>Build-A-Burger</title>
@@ -27,15 +29,16 @@
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">Logo</a>
+			<a class="navbar-brand" href="/BurgerTime/"><img src="img/burger-glyph-32px.png" /></a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="/BurgerTime/">Home</a></li>
+				<li><a href="/BurgerTime/">Home</a></li>
+				<li class="active"><a href="burgerCreateForm.do">Build-A-Burger</a></li>
 			</ul>
-			<ul class="nav navbar-nav navbar-right">
+			<!-- <ul class="nav navbar-nav navbar-right">
 				<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-			</ul>
+			</ul> -->
 		</div>
 	</div>
 	</nav>
@@ -50,7 +53,7 @@
 					
 			<div class="col-sm-8 text-left">
 			
-				<form class="form-horizontal" method="GET" action="createBurger.do">
+				<form class="form-horizontal" method="POST" action="createBurger.do">
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="name">Name:</label>
 						<div class="col-sm-10">
@@ -64,15 +67,15 @@
 						</div>
 					</div>
  				<c:forEach var="iList" items="${ ingredientLists }">
- 					<c:set var="type" value="iList.key"></c:set>
- 					<c:set var="ingredients" value="iList.value"></c:set>
+ 					<c:set var="type" value="${iList.key}"></c:set>
+ 					<c:set var="ingredients" value="${iList.value}"></c:set>
  					
 					<div class="form-group">
-						<label class="control-label col-sm-2" for="ingredient">${iList.key}:</label>
+						<label class="control-label col-sm-2" for="ingredient">${type}:</label>
 						<div class="col-sm-10">
 							<!-- <input type="text" class="form-control" name="ingredient" > -->
 							<select name="ingredientId" class="form-control" >
-							<c:forEach var="ingredient" items="${iList.value}">
+							<c:forEach var="ingredient" items="${ingredients}">
 								<option value="${ingredient.id}">${ingredient.name}</option>
 							</c:forEach>
 							</select>
@@ -81,7 +84,7 @@
 				</c:forEach>
  					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-default">Create</button>
+							<button type="submit" class="btn btn-primary pull-right">create</button>
 						</div>
 					</div>
 				</form>
@@ -89,14 +92,6 @@
 		
 		</c:when>
 		<c:otherwise>
-<%-- 			
-			<hr>
-			${ ingredientLists }
-			<hr>
-			${ ingredientLists["bun"] }
-			<hr>
-			${ ingredientLists.get("bun") }
- --%>		
 			<div class="col-sm-8 text-left">
 				<form class="form-horizontal" method="POST" action="updateBurger.do">
 					<input type="hidden" name="id" value="${burger.id}" >
@@ -125,20 +120,36 @@
 					</div>
 				</c:forEach>
 					<div class="form-group">
+						<label class="control-label col-sm-2" for="ingredientId">new item:</label>
+						<div class="col-sm-10">
+							<select name="ingredientId" class="form-control">
+								<option value="0" > (none) </option>
+								
+							<c:forEach var="iList" items="${ingredientLists}">
+								<optgroup label="${iList.key}">
+								<c:forEach var="choice" items="${iList.value}">
+								<c:if test="${choice.id ne 0}">
+								<option value="${choice.id}" > ${choice.name} </option>
+								</c:if>
+								</c:forEach>
+								</optgroup>
+							</c:forEach>
+							</select>
+						</div>
+					</div>
+					
+					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-default">Update</button>
+							<button type="submit" class="btn btn-primary pull-right">update</button>
 						</div>
 					</div>
 				</form>
 			</div>
 
-		
 		</c:otherwise>
 		</c:choose>
-	
-			
 
-
+<!-- 
 			<div class="col-sm-2 sidenav">
 				<div class="dropdown">
 					<button class="btn btn-default dropdown-toggle" type="button"
@@ -173,6 +184,7 @@
 					</ul>
 				</div>
 			</div>
+ -->
 		</div>
 	</div>
 

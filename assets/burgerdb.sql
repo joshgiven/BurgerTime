@@ -82,12 +82,12 @@ CREATE TABLE IF NOT EXISTS `burger_ingredient` (
 ENGINE = InnoDB;
 
 SET SQL_MODE = '';
-GRANT USAGE ON *.* TO burgerchef;
- DROP USER burgerchef;
+GRANT USAGE ON *.* TO burgerchef@localhost;
+ DROP USER burgerchef@localhost;
 SET SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
-CREATE USER 'burgerchef' IDENTIFIED BY 'burgerchef';
+CREATE USER 'burgerchef'@'localhost' IDENTIFIED BY 'burgerchef';
 
-GRANT SELECT, INSERT, TRIGGER, UPDATE, DELETE ON TABLE * TO 'burgerchef';
+GRANT SELECT, INSERT, TRIGGER, UPDATE, DELETE ON TABLE * TO 'burgerchef'@'localhost';
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -98,7 +98,10 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `burgerdb`;
-INSERT INTO `burger` (`id`, `name`, `description`, `creation_date`) VALUES (1, 'Cheeseburger #1', 'Plain ol\' cheeburger', '2017-02-03');
+INSERT INTO `burger` (`id`, `name`, `description`, `creation_date`) VALUES (1, 'Cheeseburger', 'An American Classic', '2017-02-03');
+INSERT INTO `burger` (`id`, `name`, `description`, `creation_date`) VALUES (2, 'Bacon Blue', 'Smoky, Salty, Funky', '2017-02-05');
+INSERT INTO `burger` (`id`, `name`, `description`, `creation_date`) VALUES (3, 'The Luther', 'A Cardiologist\'s Nightmare', '2017-02-05');
+INSERT INTO `burger` (`id`, `name`, `description`, `creation_date`) VALUES (4, 'Big Kahuna', 'Do They Speak English in What?', '2017-02-05');
 
 COMMIT;
 
@@ -144,8 +147,8 @@ INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VAL
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (16, 3, 'Relish', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (17, 3, 'Hot-Sauce', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (18, 3, 'Teriyaki', NULL);
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (19, 4, 'Cheddar', NULL);
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (20, 4, 'Swilss', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (19, 4, 'Cheddar ', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (20, 4, 'Swiss', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (22, 4, 'Feta', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (23, 4, 'Cream Cheese', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (24, 4, 'Blue Cheese', NULL);
@@ -154,7 +157,7 @@ INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VAL
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (27, 5, 'Red Onion', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (28, 5, 'White Onion', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (29, 5, 'Yellow Onion', NULL);
-INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (31, 5, 'Pickel', NULL);
+INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (31, 5, 'Pickle', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (33, 6, 'Pinnapple', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (34, 6, 'Ruffles Chips', NULL);
 INSERT INTO `ingredient` (`id`, `ingredient_type_id`, `name`, `description`) VALUES (35, 6, 'Bacon', NULL);
@@ -172,9 +175,27 @@ START TRANSACTION;
 USE `burgerdb`;
 INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (1, 1, 1, 1);
 INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (2, 1, 13, 2);
-INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (3, 1, 19, 3);
-INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (4, 1, 5, 4);
-INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (5, 1, 1, 5);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (3, 1, 12, 3);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (4, 1, 19, 4);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (5, 1, 5, 5);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (6, 1, 1, 6);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (7, 2, 1, 1);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (8, 2, 24, 2);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (9, 2, 35, 3);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (10, 2, 5, 4);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (11, 2, 1, 5);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (12, 3, 3, 1);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (13, 3, 36, 2);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (14, 3, 35, 3);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (15, 3, 19, 4);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (16, 3, 5, 5);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (17, 3, 3, 6);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (18, 4, 1, 1);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (19, 4, 18, 2);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (20, 4, 33, 3);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (21, 4, 19, 4);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (22, 4, 5, 5);
+INSERT INTO `burger_ingredient` (`id`, `burger_id`, `ingredient_id`, `position`) VALUES (23, 4, 1, 6);
 
 COMMIT;
 

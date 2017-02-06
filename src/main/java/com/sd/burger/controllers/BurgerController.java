@@ -1,9 +1,9 @@
 package com.sd.burger.controllers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,10 +30,12 @@ public class BurgerController {
 	Map<String, List<Ingredient> > generateIngredientMap() {
 		Map<Integer, String> types = dao.getAllIngredientTypes();
 		
-		Map<String, List<Ingredient> > iLists = new HashMap<>();
+		Map<String, List<Ingredient> > iLists = new TreeMap<>();
 		for(int id : types.keySet()) {
 			String type = types.get(new Integer(id));
-			iLists.put(type, dao.getIngredientsByType(id));
+			List<Ingredient> ingredients = dao.getIngredientsByType(id);
+			ingredients.add(new Ingredient(0, "(none)", "(none)", "(none)"));
+			iLists.put(type, ingredients);
 		}
 		
 		return iLists;
@@ -41,66 +43,86 @@ public class BurgerController {
 	
 	@RequestMapping(value="listBurgers.do", method=RequestMethod.GET)
 	public ModelAndView listBurgers() {
-		ModelAndView mv = new ModelAndView("listBurgers");
+		ModelAndView mv = new ModelAndView();
 		
 		List<BurgerInfo> infos = dao.getAllBurgerInfo();
-		mv.addObject("burgerInfos", infos);
+		if(infos != null) {
+			mv.addObject("burgerInfos", infos);
+			mv.setViewName("listBurgers");
+		}
+		else {
+			mv.addObject("errorText", "Burgerbase lookup failed");
+			mv.setViewName("error");
+		}
 		
 		return mv;
 	}
 	
 	@RequestMapping(value="destroyBurger.do", method=RequestMethod.GET)
 	public ModelAndView destroyBurger(int burgerId) {
+		ModelAndView mv = new ModelAndView();
 		
-		if(!dao.destroyBurgerById(burgerId)) {
-			System.out.println("Failed to destroy burger");
+		if(dao.destroyBurgerById(burgerId)) {
+			List<BurgerInfo> infos = dao.getAllBurgerInfo();
+			mv.addObject("burgerInfos", infos);
+			mv.setViewName("listBurgers");
+		}
+		else {
+			mv.addObject("errorText", "Failed to destroy burger");
+			mv.setViewName("error");
 		}
 		
-		return listBurgers();
+		return mv;
 	}
 
 	@RequestMapping(value="burgerCreateForm.do", method=RequestMethod.GET)
 	public ModelAndView burgerCreateForm() {
 		ModelAndView mv = new ModelAndView("burgerForm");
-		
 		return mv;
 	}
 	
 	@RequestMapping(value="viewBurger.do", method=RequestMethod.GET)
 	public ModelAndView viewBurger(int burgerId) {
-		ModelAndView mv = new ModelAndView("burgerForm");
+		ModelAndView mv = new ModelAndView();
 		
 		Burger burger = dao.getBurgerById(burgerId);
 		
-		if(burger == null) {
-			System.out.println("Burger lookup failed");
+		if(burger != null) {
+			mv.addObject("burger", burger);
+			mv.setViewName("burgerForm");
 		}
-		
-		mv.addObject("burger", burger);
+		else {
+			mv.addObject("errorText", "Burger lookup failed");
+			mv.setViewName("error");
+		}
 		
 		return mv;
 	}
 	
-	@RequestMapping(value="createBurger.do", method=RequestMethod.GET)
+	@RequestMapping(value="createBurger.do", method=RequestMethod.POST)
 	public ModelAndView createBurger(
-			Burger burger
-			, @RequestParam("ingredientId") ArrayList<Integer> ingredientId
+			Burger burger,
+			@RequestParam("ingredientId") ArrayList<Integer> ingredientId
 			) {
 		
 		ModelAndView mv = new ModelAndView();
 		
 		List<Ingredient> iList = new ArrayList<>();
 		for(int id : ingredientId) {
+			if(id == 0) continue;
 			iList.add(new Ingredient(id, null, null, null));
 		}
 		
 		burger.setIngredients(iList);
-		if(!dao.createBurger(burger)) {
-			System.err.println("Failed to create burger, bros");
-		}
 		
-		mv.addObject("burgerInfos", dao.getAllBurgerInfo());
-		mv.setViewName("listBurgers");
+		if(dao.createBurger(burger)) {
+			mv.addObject("burgerInfos", dao.getAllBurgerInfo());
+			mv.setViewName("listBurgers");
+		}
+		else {
+			mv.addObject("errorText", "Failed to create burger");
+			mv.setViewName("error");
+		}
 
 		return mv;
 	}
@@ -114,16 +136,20 @@ public class BurgerController {
 		
 		List<Ingredient> iList = new ArrayList<>();
 		for(int id : ingredientId) {
+			if(id == 0) continue;
 			iList.add(new Ingredient(id, null, null, null));
 		}
 		
 		burger.setIngredients(iList);
-		if(!dao.updateBurger(burger)) {
-			System.err.println("Failed to update burger, bros");
-		}
 		
-		mv.addObject("burgerInfos", dao.getAllBurgerInfo());
-		mv.setViewName("listBurgers");
+		if(dao.updateBurger(burger)) {
+			mv.addObject("burgerInfos", dao.getAllBurgerInfo());
+			mv.setViewName("listBurgers");
+		}
+		else {
+			mv.addObject("errorText", "Failed to update burger");
+			mv.setViewName("error");
+		}
 		
 		return mv;
 	}

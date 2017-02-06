@@ -28,10 +28,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Projects</a></li>
-        <li><a href="#">Contact</a></li>
+        <li class="active"><a href="/BurgerTime/">Home</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -52,12 +49,17 @@
 				<li>
 					<h3>
 						<span class="glyphicons glyphicons-fast-food"></span><a href="viewBurger.do?burgerId=${info.id}">${info.name}</a> <small>${info.description}</small>
-						<a class="btn btn-default pull-right" href="#"><span class="glyphicons glyphicons-remove-sign"></span>delete</a>
-						<a class="btn btn-default pull-right" href="#"><span class="glyphicons glyphicons-pencil"></span>update</a>
+						<a class="btn btn-default pull-right" href="destroyBurger.do?burgerId=${info.id}"></span>delete</a>
+						
+						<a class="btn btn-default pull-right" href="viewBurger.do?burgerId=${info.id}">update</a>
 					</h3>
 				</li>
 			</c:forEach>
 			</ul>
+			
+			<hr>
+			<a href="burgerCreateForm.do" class="btn btn-primary pull-right">build-a-burger</a>
+			
 		</div>
 		<div class="col-sm-2 sidenav">
 		</div>

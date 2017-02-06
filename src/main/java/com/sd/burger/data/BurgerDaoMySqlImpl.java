@@ -166,6 +166,13 @@ public class BurgerDaoMySqlImpl implements BurgerDAO {
 				stmt.setString(2, burger.getDescription());
 				int result = stmt.executeUpdate();
 
+				
+				// retrieve and set id of new burger
+				stmt = conn.prepareStatement("SELECT last_insert_id()");
+				ResultSet rs = stmt.executeQuery();
+				rs.next();
+				burger.setId(rs.getInt(1));
+				
 				List<Ingredient> ingredients = burger.getIngredients();
 				
 				System.out.println(ingredients);
@@ -177,7 +184,7 @@ public class BurgerDaoMySqlImpl implements BurgerDAO {
 
 						sql = null;
 						sql = sb.toString();
-
+System.out.println(burger.getId() +", " + ingredients.get(i).getId());
 						stmt = null;
 						stmt = conn.prepareStatement(sql);
 						stmt.setInt(1, burger.getId());

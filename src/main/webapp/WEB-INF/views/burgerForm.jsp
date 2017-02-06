@@ -10,7 +10,14 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
-	<title>Build-A-Burger</title>
+	<c:choose>
+		<c:when test="${burger == null}">
+			<title>Build-A-Burger</title>
+		</c:when>
+		<c:otherwise>
+			<title>Edit-A-Burger</title>
+		</c:otherwise>
+	</c:choose>
 </head>
 <body>
 	<nav class="navbar navbar-inverse">
@@ -24,10 +31,7 @@
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="#">Home</a></li>
-				<li><a href="#">About</a></li>
-				<li><a href="#">Projects</a></li>
-				<li><a href="#">Contact</a></li>
+				<li class="active"><a href="/BurgerTime/">Home</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -41,36 +45,98 @@
 			<div class="col-sm-2 sidenav"><!-- <img src="burger-solid.png" /> --></div>
 			
 			
+		<c:choose>
+		<c:when test="${burger == null}">
+					
 			<div class="col-sm-8 text-left">
-				<form class="form-horizontal">
+			
+				<form class="form-horizontal" method="GET" action="createBurger.do">
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="name">Name:</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="name" value="${burger.name}">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="description">Description:</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="description" value="${burger.description}">
+						</div>
+					</div>
+ 				<c:forEach var="iList" items="${ ingredientLists }">
+ 					<c:set var="type" value="iList.key"></c:set>
+ 					<c:set var="ingredients" value="iList.value"></c:set>
+ 					
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="ingredient">${iList.key}:</label>
+						<div class="col-sm-10">
+							<!-- <input type="text" class="form-control" name="ingredient" > -->
+							<select name="ingredientId" class="form-control" >
+							<c:forEach var="ingredient" items="${iList.value}">
+								<option value="${ingredient.id}">${ingredient.name}</option>
+							</c:forEach>
+							</select>
+						</div>
+					</div>
+				</c:forEach>
+ 					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" class="btn btn-default">Create</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		
+		</c:when>
+		<c:otherwise>
+<%-- 			
+			<hr>
+			${ ingredientLists }
+			<hr>
+			${ ingredientLists["bun"] }
+			<hr>
+			${ ingredientLists.get("bun") }
+ --%>		
+			<div class="col-sm-8 text-left">
+				<form class="form-horizontal" method="POST" action="updateBurger.do">
+					<input type="hidden" name="id" value="${burger.id}" >
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="text">Name:</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" id="name" value="${burger.name}">
+							<input type="text" class="form-control" name="name" value="${burger.name}">
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="pwd">Description:</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" id="description" value="${burger.description}">
+							<input type="text" class="form-control" name="description" value="${burger.description}">
 						</div>
 					</div>
 				<c:forEach var="ingredient" items="${burger.ingredients}">
 					<div class="form-group">
-						<label class="control-label col-sm-2" for="pwd">Ingredient:</label>
+						<label class="control-label col-sm-2" for="ingredientId">${ingredient.ingredientType}:</label>
 						<div class="col-sm-10">
-							<input type="text" class="form-control" id="description" value="${ingredient.name}">
+							<select name="ingredientId" class="form-control">
+							<c:forEach var="choice" items="${ingredientLists.get(ingredient.ingredientType)}">
+							<option value="${choice.id}" <c:if test="${ choice.id == ingredient.id }">selected</c:if> > ${choice.name} </option>
+							</c:forEach>
+							</select>
 						</div>
 					</div>
 				</c:forEach>
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-default">Button</button>
+							<button type="submit" class="btn btn-default">Update</button>
 						</div>
 					</div>
 				</form>
-
 			</div>
+
+		
+		</c:otherwise>
+		</c:choose>
+	
+			
 
 
 			<div class="col-sm-2 sidenav">

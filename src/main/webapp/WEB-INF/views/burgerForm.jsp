@@ -120,6 +120,25 @@
 					</div>
 				</c:forEach>
 					<div class="form-group">
+						<label class="control-label col-sm-2" for="ingredientId">new item:</label>
+						<div class="col-sm-10">
+							<select name="ingredientId" class="form-control">
+								<option value="0" > (none) </option>
+								
+							<c:forEach var="iList" items="${ingredientLists}">
+								<optgroup label="${iList.key}">
+								<c:forEach var="choice" items="${iList.value}">
+								<c:if test="${choice.id ne 0}">
+								<option value="${choice.id}" > ${choice.name} </option>
+								</c:if>
+								</c:forEach>
+								</optgroup>
+							</c:forEach>
+							</select>
+						</div>
+					</div>
+					
+					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<button type="submit" class="btn btn-primary pull-right">update</button>
 						</div>

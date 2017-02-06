@@ -67,15 +67,15 @@
 						</div>
 					</div>
  				<c:forEach var="iList" items="${ ingredientLists }">
- 					<c:set var="type" value="iList.key"></c:set>
- 					<c:set var="ingredients" value="iList.value"></c:set>
+ 					<c:set var="type" value="${iList.key}"></c:set>
+ 					<c:set var="ingredients" value="${iList.value}"></c:set>
  					
 					<div class="form-group">
-						<label class="control-label col-sm-2" for="ingredient">${iList.key}:</label>
+						<label class="control-label col-sm-2" for="ingredient">${type}:</label>
 						<div class="col-sm-10">
 							<!-- <input type="text" class="form-control" name="ingredient" > -->
 							<select name="ingredientId" class="form-control" >
-							<c:forEach var="ingredient" items="${iList.value}">
+							<c:forEach var="ingredient" items="${ingredients}">
 								<option value="${ingredient.id}">${ingredient.name}</option>
 							</c:forEach>
 							</select>

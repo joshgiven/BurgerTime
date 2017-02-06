@@ -29,7 +29,7 @@
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#"><img src="img/burger-glyph-32px.png" /></a>
+			<a class="navbar-brand" href="/BurgerTime/"><img src="img/burger-glyph-32px.png" /></a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
@@ -53,7 +53,7 @@
 					
 			<div class="col-sm-8 text-left">
 			
-				<form class="form-horizontal" method="GET" action="createBurger.do">
+				<form class="form-horizontal" method="POST" action="createBurger.do">
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="name">Name:</label>
 						<div class="col-sm-10">
@@ -84,7 +84,7 @@
 				</c:forEach>
  					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-primary pull-right">Create</button>
+							<button type="submit" class="btn btn-primary pull-right">create</button>
 						</div>
 					</div>
 				</form>
@@ -92,14 +92,6 @@
 		
 		</c:when>
 		<c:otherwise>
-<%-- 			
-			<hr>
-			${ ingredientLists }
-			<hr>
-			${ ingredientLists["bun"] }
-			<hr>
-			${ ingredientLists.get("bun") }
- --%>		
 			<div class="col-sm-8 text-left">
 				<form class="form-horizontal" method="POST" action="updateBurger.do">
 					<input type="hidden" name="id" value="${burger.id}" >
@@ -129,19 +121,16 @@
 				</c:forEach>
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
-							<button type="submit" class="btn btn-primary pull-right">Update</button>
+							<button type="submit" class="btn btn-primary pull-right">update</button>
 						</div>
 					</div>
 				</form>
 			</div>
 
-		
 		</c:otherwise>
 		</c:choose>
-	
-			
 
-
+<!-- 
 			<div class="col-sm-2 sidenav">
 				<div class="dropdown">
 					<button class="btn btn-default dropdown-toggle" type="button"
@@ -176,6 +165,7 @@
 					</ul>
 				</div>
 			</div>
+ -->
 		</div>
 	</div>
 

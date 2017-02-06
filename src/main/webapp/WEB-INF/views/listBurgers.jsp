@@ -24,7 +24,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
-      <a class="navbar-brand" href="#"><img src="img/burger-glyph-32px.png" /></a>
+      <a class="navbar-brand" href="/BurgerTime/"><img src="img/burger-glyph-32px.png" /></a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
@@ -52,7 +52,10 @@
 					<h3>
 						<span class="glyphicons glyphicons-fast-food"></span><a href="viewBurger.do?burgerId=${info.id}">${info.name}</a> <small>${info.description}</small>
 						<a class="btn btn-default pull-right" href="destroyBurger.do?burgerId=${info.id}"></span>delete</a>
-						
+						<%-- <form method=POST action="destroyBurger.do">
+							<input type="hidden" name="burgerId" value="${info.id}" />
+							<button type="submit" class="btn btn-primary pull-right">delete</button>
+						</form> --%>
 						<a class="btn btn-default pull-right" href="viewBurger.do?burgerId=${info.id}">update</a>
 					</h3>
 				</li>

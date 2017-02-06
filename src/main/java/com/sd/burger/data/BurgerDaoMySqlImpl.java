@@ -175,7 +175,6 @@ public class BurgerDaoMySqlImpl implements BurgerDAO {
 				
 				List<Ingredient> ingredients = burger.getIngredients();
 				
-				System.out.println(ingredients);
 				if (result > 0) {
 					for (int i = 0; i < ingredients.size(); i++) {
 						sb = new StringBuilder();
@@ -184,7 +183,7 @@ public class BurgerDaoMySqlImpl implements BurgerDAO {
 
 						sql = null;
 						sql = sb.toString();
-System.out.println(burger.getId() +", " + ingredients.get(i).getId());
+
 						stmt = null;
 						stmt = conn.prepareStatement(sql);
 						stmt.setInt(1, burger.getId());

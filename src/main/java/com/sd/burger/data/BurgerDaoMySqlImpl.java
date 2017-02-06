@@ -153,18 +153,24 @@ public class BurgerDaoMySqlImpl implements BurgerDAO {
 
 	@Override
 	public boolean createBurger(Burger burger) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
 		try {
 			if (burger != null) {
-				Connection conn = DriverManager.getConnection(url, user, pass);
+				conn = DriverManager.getConnection(url, user, pass);
+				conn.setAutoCommit(false);
+				
 				StringBuilder sb = new StringBuilder();
 				sb.append("INSERT INTO burger (name, description) ");
 				sb.append("VALUES (?, ?);");
 				String sql = sb.toString();
 
-				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, burger.getName());
 				stmt.setString(2, burger.getDescription());
 				int result = stmt.executeUpdate();
+				stmt.close();
 
 				
 				// retrieve and set id of new burger
@@ -192,27 +198,45 @@ public class BurgerDaoMySqlImpl implements BurgerDAO {
 						result = stmt.executeUpdate();
 					}
 					if (result > 0) {
+						conn.commit();
 						return true;
 					}
 				}
-				stmt.close();
-				conn.close();
-
+				
 			}
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
+			try { conn.rollback(); } 
+			catch (SQLException e1) { }
+			
 			e.printStackTrace();
 		}
+		finally {
+			try {
+				stmt.close();
+				conn.close();
+			} 
+			catch (Exception e) { }
+		}
+
+		try { conn.rollback(); } 
+		catch (SQLException e1) { }
+		
 		return false;
 	}
 
 	@Override
 	public boolean updateBurger(Burger burger) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
 		try {
 			if (burger != null) {
-				Connection conn = DriverManager.getConnection(url, user, pass);
+				conn = DriverManager.getConnection(url, user, pass);
+				conn.setAutoCommit(false);
+				
 				StringBuilder sb = new StringBuilder();
 				String sql = "UPDATE burger " + "SET name = ?, description = ? WHERE id = ?;";
-				PreparedStatement stmt = conn.prepareStatement(sql);
+				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, burger.getName());
 				stmt.setString(2, burger.getDescription());
 				stmt.setInt(3, burger.getId());
@@ -223,7 +247,7 @@ public class BurgerDaoMySqlImpl implements BurgerDAO {
 
 				if (result > 0) {
 					sql = "DELETE FROM burger_ingredient WHERE burger_id = ?;";
-					stmt = null;
+					stmt.close(); stmt = null;
 					stmt = conn.prepareStatement(sql);
 					stmt.setInt(1, burger.getId());
 					result = stmt.executeUpdate();
@@ -244,42 +268,72 @@ public class BurgerDaoMySqlImpl implements BurgerDAO {
 							result = stmt.executeUpdate();
 						}
 						if (result > 0) {
+							conn.commit();
 							return true;
 						}
 					}
 				}
-				stmt.close();
-				conn.close();
 			}
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
+			try { conn.rollback(); } 
+			catch (SQLException e1) { }
+			
 			e.printStackTrace();
 		}
+		finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) { }
+		}
+		
+		try { conn.rollback(); } 
+		catch (SQLException e1) { }
+
 		return false;
 	}
 
 	@Override
 	public boolean destroyBurgerById(int id) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
 		try {
-			Connection conn = DriverManager.getConnection(url, user, pass);
+			conn = DriverManager.getConnection(url, user, pass);
+			conn.setAutoCommit(false);
+
 			String sql = "DELETE FROM burger_ingredient WHERE burger_id = ?";
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, id);
 			int result = stmt.executeUpdate();
 			if (result > 0) {
 				sql = "DELETE FROM burger WHERE id = ?";
-				stmt = null;
+				stmt.close(); stmt = null;
 				stmt = conn.prepareStatement(sql);
 				stmt.setInt(1, id);
 				result = stmt.executeUpdate();
 				if (result > 0) {
+					conn.commit();
 					return true;
 				}
 			}
-			stmt.close();
-			conn.close();
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
+			try { conn.rollback(); } 
+			catch (SQLException e1) { }
+
 			e.printStackTrace();
 		}
+		finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) { }
+		}
+		
+		try { conn.rollback(); } 
+		catch (SQLException e1) { }
 		return false;
 	}
 
